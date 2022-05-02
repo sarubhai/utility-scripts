@@ -7,3 +7,11 @@ Some Utility Scripts for Automation
 ### Usage:
 - ./terraform_workspace_name.sh apply
 - ./terraform_workspace_name.sh destroy
+
+
+### 2. vault_kv_to_secrets_manager_migration.sh
+#### Description: Migrate Vault KV Secrets Engines (V1/V2) to AWS Secrets Manager
+### Usage:
+- ./vault_kv_to_secrets_manager_migration.sh
+
+#### TO-DO: Post the key/values pairs to AWS Secrets Manager
