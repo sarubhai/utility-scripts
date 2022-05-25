@@ -15,3 +15,9 @@ Some Utility Scripts for Automation
 - ./vault_kv_to_secrets_manager_migration.sh
 
 #### TO-DO: Post the key/values pairs to AWS Secrets Manager
+
+
+### 3. tf-resource-listing.sh
+#### Description: List Terraform resources By Workspace foreach nested directories
+### Usage:
+- ./tf-resource-listing.sh apply
