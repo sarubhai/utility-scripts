@@ -21,3 +21,9 @@ Some Utility Scripts for Automation
 #### Description: List Terraform resources By Workspace foreach nested directories
 ### Usage:
 - ./tf-resource-listing.sh apply
+
+
+### 4. airflow_server.sh
+#### Description: Install Standalone Airflow in EC2 Instance
+### Usage:
+- Add in User data section while Launching an EC2 Instance
