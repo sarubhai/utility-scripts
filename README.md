@@ -27,3 +27,11 @@ Some Utility Scripts for Automation
 #### Description: Install Standalone Airflow in EC2 Instance
 ### Usage:
 - Add in User data section while Launching an EC2 Instance
+
+
+### 5. mlflow_server.sh
+#### Description: Install ML Tracking Server in EC2 Instance
+### Usage:
+- Create a S3 Bucket & an IAM Role
+- Attach the IAM instance profile while Launching an EC2 Instance
+- Add in User data section while Launching an EC2 Instance
