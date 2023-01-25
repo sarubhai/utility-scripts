@@ -30,7 +30,7 @@ Some Utility Scripts for Automation
 
 
 ### 5. mlflow_server.sh
-#### Description: Install ML Tracking Server in EC2 Instance
+#### Description: Install MLflow Tracking Server in EC2 Instance
 ### Usage:
 - Create a S3 Bucket & an IAM Role
 - Attach the IAM instance profile while Launching an EC2 Instance
