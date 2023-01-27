@@ -6,22 +6,33 @@
 # Amazon Linux 2 Kernel 5.10 AMI 2.0.20221210.1 x86_64 HVM gp2
 
 
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=airflow_db
+POSTGRES_USER=airflow_user
+POSTGRES_PASSWORD=airflow_pass
+
+
+# Optional PostgreSQL in the same machine. You may use RDS/managed database #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Install PostgreSQL (Optional)
 sudo amazon-linux-extras enable postgresql14 > /dev/null
 sudo yum -y install postgresql postgresql-server postgresql-contrib postgresql-devel > /dev/null
 sudo pip3 install psycopg2-binary
 
-
 # Configure Database
 sudo postgresql-setup initdb
 sudo systemctl enable postgresql
 sudo systemctl start postgresql
-sudo -u postgres psql -c "CREATE DATABASE airflow_db;"
-sudo -u postgres psql -c "CREATE USER airflow_user WITH PASSWORD 'airflow_pass';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE airflow_db TO airflow_user;"
+sudo -u postgres psql -c "CREATE DATABASE ${POSTGRES_DB};"
+sudo -u postgres psql -c "CREATE USER ${POSTGRES_USER} WITH PASSWORD '${POSTGRES_PASSWORD}';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DB} TO ${POSTGRES_USER};"
 
 sudo sed -i 's|host    all             all             127.0.0.1/32            ident|host    all             all             127.0.0.1/32            md5|g' /var/lib/pgsql/data/pg_hba.conf
 sudo systemctl restart postgresql
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 
 # Airflow Setup
 sudo mkdir /opt/airflow
@@ -30,6 +41,7 @@ sudo mkdir /opt/airflow/logs
 sudo mkdir /opt/airflow/plugins
 
 # Project Repository
+sudo yum -y install git
 # git clone https://github.com/username/demo_airflow.git
 
 
@@ -44,7 +56,7 @@ sudo pip3 install apache-airflow[amazon,databricks,dbt-cloud,postgres,sftp,snowf
 sudo pip3 install -r requirements.txt
 
 airflow config list 2> /dev/null
-sed -i 's|sql_alchemy_conn = sqlite:////opt/airflow/airflow.db|sql_alchemy_conn = postgresql+psycopg2://airflow_user:airflow_pass@localhost/airflow_db|g' /opt/airflow/airflow.cfg
+sed -i "s|sql_alchemy_conn = sqlite:////opt/airflow/airflow.db|sql_alchemy_conn = postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}|g" /opt/airflow/airflow.cfg
 sed -i 's|executor = SequentialExecutor|executor = LocalExecutor|g' /opt/airflow/airflow.cfg
 sed -i 's|load_examples = True|load_examples = False|g' /opt/airflow/airflow.cfg
 sed -i 's|parallelism = 32|parallelism = 4|g' /opt/airflow/airflow.cfg
@@ -101,7 +113,3 @@ sudo systemctl enable airflow-webserver.service
 sudo systemctl enable airflow-scheduler.service
 sudo systemctl start airflow-webserver
 sudo systemctl start airflow-scheduler
-
-
-# yum install -y mysql-devel python-devel python-setuptools
-# pip install MySQL-python
